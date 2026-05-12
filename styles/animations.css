@@ -1,0 +1,8 @@
+.matrix-column {
+  position: absolute;
+  top: -20%;
+  width: 1px;
+  height: 140%;
+  background: linear-gradient(180deg, transparent, rgba(81, 199, 255, 0.5), transparent);
+  animation: pulseLine 5s linear infinite;
+}

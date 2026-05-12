@@ -1,0 +1,1 @@
+self.__NEXT_FONT_MANIFEST="{\"pages\":{},\"app\":{\"/Users/souvickdey/ChainproofAi/app/layout\":[\"static/media/36966cca54120369-s.p.woff2\",\"static/media/bcabc166894edc33-s.p.woff2\",\"static/media/8e1aff43465872fa-s.p.woff2\"]},\"appUsingSizeAdjust\":true,\"pagesUsingSizeAdjust\":false}"
