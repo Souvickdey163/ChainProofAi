@@ -1,0 +1,49 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_28-c602761bebf29c75599beaec9d53c015ed408811",
+  "solcVersion": "0.8.28",
+  "solcLongVersion": "0.8.28+commit.7893614a",
+  "compilerType": "solc",
+  "toolVersions": {
+    "hardhat": "3.4.5"
+  },
+  "userSourceNameMap": {
+    "contracts/FileVerification.sol": "project/contracts/FileVerification.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "cancun",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode.linkReferences",
+            "evm.bytecode.object",
+            "evm.bytecode.opcodes",
+            "evm.bytecode.sourceMap",
+            "evm.deployedBytecode.immutableReferences",
+            "evm.deployedBytecode.linkReferences",
+            "evm.deployedBytecode.object",
+            "evm.deployedBytecode.opcodes",
+            "evm.deployedBytecode.sourceMap",
+            "evm.methodIdentifiers"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/FileVerification.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\n/**\n * @title FileVerification\n * @dev Smart contract for storing and verifying file hashes on Polygon blockchain\n */\ncontract FileVerification {\n    \n    // Struct to store verification details\n    struct VerificationDetails {\n        address verifier;\n        uint256 timestamp;\n        bool isVerified;\n    }\n    \n    // Mapping from file hash to verification details\n    mapping(string => VerificationDetails) public verifiedFiles;\n    \n    // Array to store all verified file hashes for indexing\n    string[] public allVerifiedHashes;\n    \n    // Events\n    event FileVerified(address indexed verifier, string fileHash, uint256 timestamp);\n    event FileRevoked(address indexed revoker, string fileHash, uint256 timestamp);\n    \n    // Modifiers\n    modifier onlyValidHash(string memory fileHash) {\n        require(bytes(fileHash).length == 64, \"Invalid hash length\");\n        _;\n    }\n    \n    /**\n     * @dev Verify a file by storing its hash on blockchain\n     * @param fileHash SHA-256 hash of the file\n     */\n    function verifyFile(string memory fileHash) \n        public \n        onlyValidHash(fileHash) \n        returns (bool) \n    {\n        require(!verifiedFiles[fileHash].isVerified, \"File already verified\");\n        \n        // Store verification details\n        verifiedFiles[fileHash] = VerificationDetails({\n            verifier: msg.sender,\n            timestamp: block.timestamp,\n            isVerified: true\n        });\n        \n        // Add to array for indexing\n        allVerifiedHashes.push(fileHash);\n        \n        // Emit event\n        emit FileVerified(msg.sender, fileHash, block.timestamp);\n        \n        return true;\n    }\n    \n    /**\n     * @dev Get verification details for a file\n     * @param fileHash SHA-256 hash of the file\n     * @return verifier Address that verified the file\n     * @return timestamp When the file was verified\n     * @return isVerified Whether the file is verified\n     */\n    function getVerificationDetails(string memory fileHash) \n        public \n        view \n        returns (address verifier, uint256 timestamp, bool isVerified) \n    {\n        VerificationDetails memory details = verifiedFiles[fileHash];\n        return (details.verifier, details.timestamp, details.isVerified);\n    }\n    \n    /**\n     * @dev Check if a file is verified\n     * @param fileHash SHA-256 hash of the file\n     * @return bool True if verified\n     */\n    function isFileVerified(string memory fileHash) \n        public \n        view \n        returns (bool) \n    {\n        return verifiedFiles[fileHash].isVerified;\n    }\n    \n    /**\n     * @dev Get total number of verified files\n     * @return uint256 Count of verified files\n     */\n    function getVerifiedFilesCount() \n        public \n        view \n        returns (uint256) \n    {\n        return allVerifiedHashes.length;\n    }\n    \n    /**\n     * @dev Get all verified file hashes (paginated)\n     * @param offset Starting index\n     * @param limit Number of records to fetch\n     * @return string[] Array of file hashes\n     */\n    function getVerifiedFilesBatch(uint256 offset, uint256 limit) \n        public \n        view \n        returns (string[] memory) \n    {\n        uint256 end = offset + limit;\n        if (end > allVerifiedHashes.length) {\n            end = allVerifiedHashes.length;\n        }\n        \n        string[] memory batch = new string[](end - offset);\n        for (uint256 i = offset; i < end; i++) {\n            batch[i - offset] = allVerifiedHashes[i];\n        }\n        \n        return batch;\n    }\n}"
+      }
+    }
+  }
+}

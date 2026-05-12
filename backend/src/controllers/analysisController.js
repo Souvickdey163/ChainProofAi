@@ -26,8 +26,15 @@ const analyzeFile = async (req, res, next) => {
                 success: true,
                 message: 'File already analyzed',
                 data: {
+                    fileId: file._id,
+                    fileHash: file.fileHash,
                     trustScore: file.analysis.trustScore,
-                    analysis: file.analysis
+                    analysis: file.analysis,
+                    blockchain: file.blockchain?.verified ? {
+                        verified: true,
+                        transactionHash: file.blockchain.transactionHash,
+                        blockNumber: file.blockchain.blockNumber
+                    } : null
                 }
             });
         }

@@ -4,7 +4,7 @@ const fs = require('fs');
 
 class PythonAIService {
     constructor() {
-        this.serviceUrl = process.env.PYTHON_SERVICE_URL || 'http://localhost:5001';
+        this.serviceUrl = process.env.PYTHON_SERVICE_URL || 'http://localhost:5002';
     }
 
     /**

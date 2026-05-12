@@ -1,1 +1,3 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API || "http://WINDOWS_LOCAL_IP:5000";
+const baseUrl = process.env.NEXT_PUBLIC_API || "http://localhost:5001";
+
+export const API_BASE_URL = baseUrl.endsWith("/api") ? baseUrl : `${baseUrl}/api`;

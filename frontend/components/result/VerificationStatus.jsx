@@ -3,7 +3,7 @@ import { cn, getTrustScoreState } from "@/lib/helpers";
 import { GlassCard } from "@/components/ui/GlassCard";
 
 export function VerificationStatus({ analysis }) {
-  const isVerified = analysis?.status?.toLowerCase().includes("verified");
+  const isVerified = Boolean(analysis?.blockchainVerified) || Number(analysis?.trustScore ?? 0) >= 80;
   const scoreState = getTrustScoreState(Number(analysis?.trustScore ?? 0));
 
   return (
@@ -18,7 +18,7 @@ export function VerificationStatus({ analysis }) {
       <p className="mt-4 text-sm leading-7 text-slate-300">
         {isVerified
           ? "Integrity checks passed across AI analysis, metadata consistency, and ledger verification."
-          : "AI forensic analysis detected tampering signals, mismatch indicators, or suspicious content regions."}
+          : "The result needs review because the trust score is lower, metadata issues were found, or chain anchoring is still pending."}
       </p>
     </GlassCard>
   );

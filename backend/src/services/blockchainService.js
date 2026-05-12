@@ -32,7 +32,9 @@ class BlockchainService {
                 console.warn('⚠️ Contract address not set. Deploy contract first.');
             }
         } catch (error) {
-            console.error('❌ Blockchain initialization error:', error.message);
+            console.error('❌ Blockchain initialization error:');
+            console.error(error);
+            console.error(error.stack);
         }
     }
 

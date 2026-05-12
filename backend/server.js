@@ -1,6 +1,9 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
+
 const connectDB = require('./src/config/database');
 const errorHandler = require('./src/middleware/errorHandler');
 
@@ -8,9 +11,6 @@ const errorHandler = require('./src/middleware/errorHandler');
 const fileRoutes = require('./src/routes/fileRoutes');
 const analysisRoutes = require('./src/routes/analysisRoutes');
 const verificationRoutes = require('./src/routes/verificationRoutes');
-
-// Load environment variables
-dotenv.config();
 
 // Initialize express app
 const app = express();
@@ -23,31 +23,45 @@ app.use(cors({
     origin: process.env.CLIENT_URL || '*',
     credentials: true
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Static uploads folder
 app.use('/uploads', express.static('uploads'));
 
-// Routes
+// API Routes
 app.use('/api', fileRoutes);
 app.use('/api', analysisRoutes);
 app.use('/api', verificationRoutes);
 
-// Health check endpoint
+// Health Check Route
 app.get('/health', (req, res) => {
-    res.json({ 
-        status: 'OK', 
+    res.json({
+        status: 'OK',
         service: 'ChainProof AI Backend',
+        blockchain: 'Polygon Amoy',
         timestamp: new Date().toISOString()
     });
 });
 
-// Error handling middleware
+// Root Route
+app.get('/', (req, res) => {
+    res.json({
+        message: '🚀 ChainProof AI Backend Running',
+        version: '1.0.0',
+        status: 'ACTIVE'
+    });
+});
+
+// Error Handler
 app.use(errorHandler);
 
-// Start server
-const PORT = process.env.PORT || 5000;
+// Start Server
+const PORT = process.env.PORT || 5001;
+
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 ChainProof AI Backend running on http://0.0.0.0:${PORT}`);
     console.log(`📁 Upload directory: ${__dirname}/uploads`);
-    console.log(`🔗 Blockchain: Polygon Mumbai Testnet`);
+    console.log(`🔗 Blockchain: Polygon Amoy Testnet`);
 });
